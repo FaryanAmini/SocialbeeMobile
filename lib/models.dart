@@ -3,8 +3,6 @@
 // in the production version of this application this will be the backend / database
 // the rest of this projects code will not change by much
 
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'theme.dart';
