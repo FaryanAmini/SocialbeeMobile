@@ -169,6 +169,6 @@ class Reminder {
   });
   final String id;
   final Friend friend;
-  int dueindays;
+  int dueInDays;
   bool isOutstanding;
 }
