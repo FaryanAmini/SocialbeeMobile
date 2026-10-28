@@ -1,17 +1,14 @@
 # socialbee
 
-A new Flutter project.
+This is the first version of the mobile application. 
+this has a lot of the logic created, and should function without any persistance.
 
-## Getting Started
+# AI DISCLOSURE
 
-This project is a starting point for a Flutter application.
+I did use a lot of AI for this. IF I used it for more than just learning and understanding the code, the top of the script with state that I used AI for it. 
 
-A few resources to get you started if this is your first Flutter project:
+I have been learning Dart while working on this, with frankly very tight deadlines. This is a simple version of the application. 
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+ Much will change. 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ Including future, complete rewrites.
