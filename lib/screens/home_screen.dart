@@ -234,7 +234,7 @@ void showHangoutSheet(BuildContext context, PlannedHangout hangout) {
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.black,
     builder: (BuildContext sheetContext) {
       return SafeArea(
         child: Padding(
@@ -317,7 +317,7 @@ void showReminderSheet(BuildContext context, Reminder reminder) {
   AppState app = AppScope.of(context);
   showModalBottomSheet<void>(
     context: context,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.black,
     builder: (BuildContext sheetContext) {
       return SafeArea(
         child: Padding(

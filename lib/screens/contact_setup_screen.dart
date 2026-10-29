@@ -16,7 +16,7 @@ void openContactSetup(BuildContext context, Friend friend) {
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.black,
     builder: (BuildContext sheetContext) {
       return Padding(
         padding: EdgeInsets.fromLTRB(

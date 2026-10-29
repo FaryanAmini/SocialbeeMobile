@@ -157,7 +157,7 @@ class _FriendTile extends StatelessWidget {
   void _showQuickMenu(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.black,
       builder: (BuildContext sheetContext) {
         void closeAnd(void Function() action) {
           Navigator.of(sheetContext).pop();

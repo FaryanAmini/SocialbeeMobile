@@ -23,7 +23,7 @@ void openScheduleScreen(
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: Colors.black,
     builder: (BuildContext sheetContext) {
       return Padding(
         // The sheet should cover most of the screen but always fit it,
