@@ -76,7 +76,6 @@ class _AppShellState extends State<AppShell> {
           child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              const AmbientBackground(),
               IndexedStack(index: selectedTab, children: pages),
               Positioned(
                 left: 16,
@@ -145,6 +144,7 @@ class GlassDock extends StatelessWidget {
     return GlassCard(
       radius: 28,
       padding: const EdgeInsets.all(6),
+      frosted: true,
       child: Stack(
         children: <Widget>[
           // The bright capsule that slides to the selected tab.

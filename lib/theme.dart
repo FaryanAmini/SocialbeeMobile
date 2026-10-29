@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
-  static const Color background = Color(0xFF09090C);
+  static const Color background = Color(0xFF000000);
   static const Color line = Color(0x24FFFFFF);
   static const Color ink = Color(0xFFF2F2F5);
   static const Color inkSoft = Color(0xFFA8A8B2);

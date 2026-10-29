@@ -1,11 +1,9 @@
 // glass.dart — the "liquid glass" building blocks.
 //
-// The look is three ingredients:
-//   1. AmbientBackground: soft colored glows painted on the page behind
-//      everything, so the blur has something to smear around.
-//   2. GlassCard: blur what is behind the card, then lay a translucent white
-//      gradient + one bright thin border on top. That is the frost.
-//   3. GlassChip: the same idea at pill size.
+// The look is two ingredients:
+//   1. GlassCard: a translucent white gradient + one bright thin border.
+//      Only the frosted variant (nav bar) also blurs what is behind it.
+//   2. GlassChip: the same idea at pill size.
 //
 // No shadows anywhere. The blur and the border do all the work.
 
@@ -17,60 +15,7 @@ import 'package:flutter/material.dart';
 
 import '../theme.dart';
 
-// Big soft radial glows, pinned near the corners of the screen.
-// They are static on purpose (no animation) — it keeps this file short.
-class AmbientBackground extends StatelessWidget {
-  const AmbientBackground({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        double width = constraints.maxWidth;
-        double height = constraints.maxHeight;
-        return Stack(
-          children: <Widget>[
-            _glow(
-              width * 0.12,
-              height * 0.02,
-              width * 1.2,
-              const Color(0x33F5A524),
-            ),
-            _glow(
-              width * 0.92,
-              height * 0.28,
-              width * 0.9,
-              const Color(0x268B7CFF),
-            ),
-            _glow(
-              width * 0.18,
-              height * 0.86,
-              width * 1.0,
-              const Color(0x1F2FBF8F),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _glow(double centerX, double centerY, double radius, Color color) {
-    return Positioned(
-      left: centerX - radius / 2,
-      top: centerY - radius / 2,
-      width: radius,
-      height: radius,
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: RadialGradient(colors: <Color>[color, color.withAlpha(0)]),
-        ),
-      ),
-    );
-  }
-}
-
-// A frosted rounded panel. Put anything inside it.
+// A rounded panel. Put anything inside it.
 class GlassCard extends StatelessWidget {
   const GlassCard({
     super.key,
@@ -79,6 +24,7 @@ class GlassCard extends StatelessWidget {
     this.radius = 24,
     this.borderAccent, // pass a color to tint the border (e.g. amber nudges)
     this.onTap,
+    this.frosted = false, // true = liquid-glass blur; only the nav bar uses it
   });
 
   final Widget child;
@@ -86,38 +32,43 @@ class GlassCard extends StatelessWidget {
   final double radius;
   final Color? borderAccent;
   final VoidCallback? onTap;
+  final bool frosted;
 
   @override
   Widget build(BuildContext context) {
     BorderRadius shape = BorderRadius.circular(radius);
 
     // Layer cake, bottom to top:
-    //   blurred backdrop -> white sheen gradient -> border -> content
-    Widget card = ClipRRect(
-      borderRadius: shape,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: shape,
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: <Color>[
-                Color(0x15FFFFFF), // brighter frost top-left
-                Color(0x08FFFFFF), // fading toward bottom-right
-              ],
-            ),
-            border: Border.all(
-              color: borderAccent != null
-                  ? borderAccent!.withAlpha(120)
-                  : glassBorder,
-              width: 1,
-            ),
-          ),
-          child: Padding(padding: padding, child: child),
+    //   (optional blurred backdrop) -> white sheen gradient -> border -> content
+    Widget surface = Container(
+      decoration: BoxDecoration(
+        borderRadius: shape,
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: <Color>[
+            Color(0x15FFFFFF), // brighter frost top-left
+            Color(0x08FFFFFF), // fading toward bottom-right
+          ],
+        ),
+        border: Border.all(
+          color: borderAccent != null
+              ? borderAccent!.withAlpha(120)
+              : glassBorder,
+          width: 1,
         ),
       ),
+      child: Padding(padding: padding, child: child),
+    );
+
+    Widget card = ClipRRect(
+      borderRadius: shape,
+      child: frosted
+          ? BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
+              child: surface,
+            )
+          : surface,
     );
 
     // Make the whole card tappable if the caller gave us an onTap.
@@ -128,7 +79,7 @@ class GlassCard extends StatelessWidget {
   }
 }
 
-// A small frosted pill button: "Schedule", "Sync account"...
+// A small pill button (flat, no blur): "Schedule", "Sync account"...
 class GlassChip extends StatelessWidget {
   const GlassChip({
     super.key,
@@ -151,49 +102,43 @@ class GlassChip extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(18),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              color: emphasis
-                  ? AppColors.accent.withAlpha(28) // ~11% amber
-                  : Colors.white.withAlpha(15), // ~6% white
-              border: Border.all(
-                color: emphasis
-                    ? AppColors.accent.withAlpha(115)
-                    : Colors.white.withAlpha(35),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+          color: emphasis
+              ? AppColors.accent.withAlpha(28) // ~11% amber
+              : Colors.white.withAlpha(15), // ~6% white
+          border: Border.all(
+            color: emphasis
+                ? AppColors.accent.withAlpha(115)
+                : Colors.white.withAlpha(35),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            if (icon != null) ...<Widget>[
+              Icon(icon, size: 15, color: foreground),
+              const SizedBox(width: 6),
+            ],
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: foreground,
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (icon != null) ...<Widget>[
-                  Icon(icon, size: 15, color: foreground),
-                  const SizedBox(width: 6),
-                ],
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: foreground,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          ],
         ),
       ),
     );
   }
 }
 
-// The soft dark gradient every page background sits on. Wrap a page body
-// in this to get the "glass over ambience" effect.
+// The plain black every page background sits on. Wrap a page body in this
+// so the frosted nav bar has content scrolling underneath it to blur.
 class GlassPageBackground extends StatelessWidget {
   const GlassPageBackground({super.key, required this.child});
 
@@ -205,7 +150,6 @@ class GlassPageBackground extends StatelessWidget {
       fit: StackFit.expand,
       children: <Widget>[
         const ColoredBox(color: AppColors.background),
-        const IgnorePointer(child: AmbientBackground()),
         child,
       ],
     );
